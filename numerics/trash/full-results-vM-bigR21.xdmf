@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<!DOCTYPE Xdmf SYSTEM "Xdmf.dtd" []>
+<Xdmf Version="3.0" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <Domain>
+    <Grid Name="mesh" GridType="Uniform">
+      <Topology TopologyType="Tetrahedron" NumberOfElements="23657" NodesPerElement="4">
+        <DataItem Dimensions="23657 4" NumberType="Int" Format="HDF">full-results-vM-bigR21.h5:/Mesh/mesh/topology</DataItem>
+      </Topology>
+      <Geometry GeometryType="XYZ">
+        <DataItem Dimensions="5252 3" Format="HDF">full-results-vM-bigR21.h5:/Mesh/mesh/geometry</DataItem>
+      </Geometry>
+    </Grid>
+    <Grid Name="Deflection" GridType="Collection" CollectionType="Temporal">
+      <Grid Name="Deflection" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="1" />
+        <Attribute Name="Deflection" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="5252 3" Format="HDF">full-results-vM-bigR21.h5:/Function/Deflection/1</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="Deflection" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="2" />
+        <Attribute Name="Deflection" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="5252 3" Format="HDF">full-results-vM-bigR21.h5:/Function/Deflection/2</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="Deflection" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="3" />
+        <Attribute Name="Deflection" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="5252 3" Format="HDF">full-results-vM-bigR21.h5:/Function/Deflection/3</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="Deflection" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="4" />
+        <Attribute Name="Deflection" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="5252 3" Format="HDF">full-results-vM-bigR21.h5:/Function/Deflection/4</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="Deflection" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="5" />
+        <Attribute Name="Deflection" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="5252 3" Format="HDF">full-results-vM-bigR21.h5:/Function/Deflection/5</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="Deflection" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="6" />
+        <Attribute Name="Deflection" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="5252 3" Format="HDF">full-results-vM-bigR21.h5:/Function/Deflection/6</DataItem>
+        </Attribute>
+      </Grid>
+    </Grid>
+    <Grid Name="vonMises" GridType="Collection" CollectionType="Temporal">
+      <Grid Name="vonMises" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="1" />
+        <Attribute Name="vonMises" AttributeType="Scalar" Center="Cell">
+          <DataItem Dimensions="23657 1" Format="HDF">full-results-vM-bigR21.h5:/Function/vonMises/1</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="vonMises" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="2" />
+        <Attribute Name="vonMises" AttributeType="Scalar" Center="Cell">
+          <DataItem Dimensions="23657 1" Format="HDF">full-results-vM-bigR21.h5:/Function/vonMises/2</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="vonMises" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="3" />
+        <Attribute Name="vonMises" AttributeType="Scalar" Center="Cell">
+          <DataItem Dimensions="23657 1" Format="HDF">full-results-vM-bigR21.h5:/Function/vonMises/3</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="vonMises" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="4" />
+        <Attribute Name="vonMises" AttributeType="Scalar" Center="Cell">
+          <DataItem Dimensions="23657 1" Format="HDF">full-results-vM-bigR21.h5:/Function/vonMises/4</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="vonMises" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="5" />
+        <Attribute Name="vonMises" AttributeType="Scalar" Center="Cell">
+          <DataItem Dimensions="23657 1" Format="HDF">full-results-vM-bigR21.h5:/Function/vonMises/5</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="vonMises" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="6" />
+        <Attribute Name="vonMises" AttributeType="Scalar" Center="Cell">
+          <DataItem Dimensions="23657 1" Format="HDF">full-results-vM-bigR21.h5:/Function/vonMises/6</DataItem>
+        </Attribute>
+      </Grid>
+    </Grid>
+  </Domain>
+</Xdmf>

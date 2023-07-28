@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE Xdmf SYSTEM "Xdmf.dtd" []>
+<Xdmf Version="3.0" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <Domain>
+    <Grid Name="mesh" GridType="Uniform">
+      <Topology TopologyType="Tetrahedron" NumberOfElements="14686" NodesPerElement="4">
+        <DataItem Dimensions="14686 4" NumberType="Int" Format="HDF">quarter-results_simpleContact-nonlin.h5:/Mesh/mesh/topology</DataItem>
+      </Topology>
+      <Geometry GeometryType="XYZ">
+        <DataItem Dimensions="3569 3" Format="HDF">quarter-results_simpleContact-nonlin.h5:/Mesh/mesh/geometry</DataItem>
+      </Geometry>
+    </Grid>
+    <Grid Name="Deflection" GridType="Collection" CollectionType="Temporal">
+      <Grid Name="Deflection" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="1" />
+        <Attribute Name="Deflection" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="3569 3" Format="HDF">quarter-results_simpleContact-nonlin.h5:/Function/Deflection/1</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="Deflection" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="2" />
+        <Attribute Name="Deflection" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="3569 3" Format="HDF">quarter-results_simpleContact-nonlin.h5:/Function/Deflection/2</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="Deflection" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="3" />
+        <Attribute Name="Deflection" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="3569 3" Format="HDF">quarter-results_simpleContact-nonlin.h5:/Function/Deflection/3</DataItem>
+        </Attribute>
+      </Grid>
+    </Grid>
+    <Grid Name="vonMises" GridType="Collection" CollectionType="Temporal">
+      <Grid Name="vonMises" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="1" />
+        <Attribute Name="vonMises" AttributeType="Scalar" Center="Cell">
+          <DataItem Dimensions="14686 1" Format="HDF">quarter-results_simpleContact-nonlin.h5:/Function/vonMises/1</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="vonMises" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="2" />
+        <Attribute Name="vonMises" AttributeType="Scalar" Center="Cell">
+          <DataItem Dimensions="14686 1" Format="HDF">quarter-results_simpleContact-nonlin.h5:/Function/vonMises/2</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="vonMises" GridType="Uniform">
+        <xi:include xpointer="xpointer(/Xdmf/Domain/Grid[@GridType='Uniform'][1]/*[self::Topology or self::Geometry])" />
+        <Time Value="3" />
+        <Attribute Name="vonMises" AttributeType="Scalar" Center="Cell">
+          <DataItem Dimensions="14686 1" Format="HDF">quarter-results_simpleContact-nonlin.h5:/Function/vonMises/3</DataItem>
+        </Attribute>
+      </Grid>
+    </Grid>
+  </Domain>
+</Xdmf>

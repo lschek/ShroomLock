@@ -5,7 +5,13 @@ import matplotlib.pyplot as plt
 plt.rcParams.update({
     "text.usetex": True,
     "font.family": "sans-serif",
-    "font.sans-serif": "Helvetica",
+    "font.sans-serif": "cmss",
+    "font.size": 20,
+    "axes.labelsize": 20,
+    "axes.titlesize": 20,
+    "xtick.labelsize": 20,
+    "ytick.labelsize": 20,
+    "legend.fontsize": 20
 })
 
 class experiment:
@@ -45,10 +51,12 @@ class experiment:
 
         for n in range(self.n_takes):
             axs[1].plot(self.displacement[n], self.force[n], label=f"Measurement {n + 1}")
+            #axs[1].plot(self.displacement[n], self.force[n], label=f"Messung {n + 1}")
 
         
         meancolor = "lightskyblue"
         axs[0].plot(self.interpolated_displacement, self.mean_force, color=meancolor, label=f"Mean of all measurements")
+        #axs[0].plot(self.interpolated_displacement, self.mean_force, color=meancolor, label=f"Mittelung aller Messungen")
         axs[0].fill_between(self.interpolated_displacement, self.mean_force-self.std_force, self.mean_force + self.std_force, color=meancolor, alpha=0.3)
 
         # Turn on the grid
@@ -75,14 +83,15 @@ class mechanism:
 
         for experiment_n in self.experiments:
             experiment_n.interpolate_data(n_interpPoints=30, zmax=self.max_displacement)
-            experiment_n.make_plot(xmax=1.02*self.max_displacement, ymax=1.02*self.max_force)
+            experiment_n.make_plot(xmax=1.1*self.max_displacement, ymax=1.1*self.max_force)
             experiment_n.fig.savefig(f"{experiment_n.title}-results.pdf", format="pdf")
+            experiment_n.fig.savefig(f"{experiment_n.title}-results.svg")
 
     def make_plot(self, xmax=None, ymax=None):
         if xmax == None:
-            xmax = self.max_displacement
+            xmax = 1.1 * self.max_displacement
         if ymax == None:
-            ymax = self.max_force
+            ymax = 1.1 * self.max_force
 
         self.mean_force = np.mean([experiment_n.mean_force for experiment_n in self.experiments], axis=0)
         self.std_force = np.std([experiment_n.mean_force for experiment_n in self.experiments], axis=0)
@@ -92,12 +101,17 @@ class mechanism:
 
         meancolor = "lightskyblue" #TODO
         axs[0].plot(self.displacement, self.mean_force, color=meancolor, label="Mean of means of all mechanisms")
+        #axs[0].plot(self.displacement, self.mean_force, color=meancolor, label="Mittelung aller Mechanismen")
         axs[0].fill_between(self.displacement, self.mean_force-self.std_force, self.mean_force + self.std_force, color=meancolor, alpha=0.3)
+        #u_foo = np.array([0.16, 0.41, 0.74, 1.12, 1.48, 1.81, 2.11, 2.38, 2.65, 2.94])
 
+        #F_foo = 4 * np.array([0.5, 1.,  1.5, 2.,  2.5, 3.,  3.5, 4.,  4.5, 5. ])
+        #axs[0].plot(u_foo, F_foo, label="Numerical analysis, without slip")
         for n, experiment_n in enumerate(self.experiments):
             axs[1].plot(experiment_n.interpolated_displacement, experiment_n.mean_force, label=f"Mean of mechanism {n + 1}")
+            #axs[1].plot(experiment_n.interpolated_displacement, experiment_n.mean_force, label=f"Mechanismus {n + 1}")
             axs[1].fill_between(experiment_n.interpolated_displacement, experiment_n.mean_force-experiment_n.std_force, experiment_n.mean_force + experiment_n.std_force, alpha=0.3)
-        
+
                 # Turn on the grid
         for ax in axs:
             ax.grid(True, linestyle='dotted')
@@ -105,8 +119,8 @@ class mechanism:
             ax.set_ylabel(r"Force $F$ in N")
             ax.set_xlim(0, xmax)
             ax.set_ylim(0, ymax)
-            ax.legend(loc='upper right')
-
+            #ax.legend(loc='upper right')
+        axs[0].legend(loc='upper right')
         self.fig.suptitle("Mean result from all mechanisms")
         plt.tight_layout()
 
@@ -126,6 +140,7 @@ if __name__=="__main__":
     #     experiment_foo.make_plot(5.5, 18.5) # TODO When it comes to plotting, keep in mind the biggest numbers!
     #     experiment_foo.fig.savefig(f"{title}-results.pdf", format="pdf")
 
-    foo = mechanism(4)
+    foo = mechanism(8)
     foo.make_plot()
     foo.fig.savefig("TPU_V7-results.pdf", format="pdf")
+    foo.fig.savefig("TPU_V7-results.svg")
