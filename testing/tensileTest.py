@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.stats as st
 
 plt.rcParams.update({
     "text.usetex": True,
@@ -13,6 +14,9 @@ plt.rcParams.update({
     "ytick.labelsize": 20,
     "legend.fontsize": 20
 })
+
+colors = ["tab:olive", "tab:orange", "tab:blue", "tab:red", "tab:purple", "tab:brown", "tab:pink", "tab:green"]
+linestyles = ["solid", "dotted", "dashed", (0, (3, 1, 1, 1))]
 
 class experiment:
     """
@@ -45,19 +49,22 @@ class experiment:
 
         self.mean_force = np.mean(mean_forces[1:], axis=0)
         self.std_force = np.std(mean_forces[1:], axis=0)
+        self.sem_force = st.sem(mean_forces[1:], axis=0)
+        self.t_value = st.t.interval(confidence=0.95, df=7, loc=self.mean_force, scale=self.sem_force)
     
     def make_plot(self, xmax, ymax):
         self.fig, axs = plt.subplots(1,2,figsize=(16,8))
 
         for n in range(self.n_takes):
-            axs[1].plot(self.displacement[n], self.force[n], label=f"Measurement {n + 1}")
-            #axs[1].plot(self.displacement[n], self.force[n], label=f"Messung {n + 1}")
+            axs[0].plot(self.displacement[n], self.force[n], label=f"Measurement {n + 1}", linestyle=linestyles[n], color=colors[int(self.title[-1]) - 1])
+            #axs[0].plot(self.displacement[n], self.force[n], label=f"Messung {n + 1}")
 
         
-        meancolor = "lightskyblue"
-        axs[0].plot(self.interpolated_displacement, self.mean_force, color=meancolor, label=f"Mean of all measurements")
-        #axs[0].plot(self.interpolated_displacement, self.mean_force, color=meancolor, label=f"Mittelung aller Messungen")
-        axs[0].fill_between(self.interpolated_displacement, self.mean_force-self.std_force, self.mean_force + self.std_force, color=meancolor, alpha=0.3)
+        meancolor = colors[int(self.title[-1]) - 1]
+        axs[1].plot(self.interpolated_displacement, self.mean_force, color=meancolor, label=f"Mean of all measurements")
+        #axs[1].plot(self.interpolated_displacement, self.mean_force, color=meancolor, label=f"Mittelung aller Messungen")
+        #axs[1].fill_between(self.interpolated_displacement, self.mean_force-self.std_force, self.mean_force + self.std_force, color=meancolor, alpha=0.3)
+        axs[1].fill_between(self.interpolated_displacement, self.t_value[0], self.t_value[1], color=meancolor, alpha=0.3)
 
         # Turn on the grid
         for ax in axs:
@@ -74,7 +81,7 @@ class experiment:
 class mechanism:
     def __init__(self, n_experiments):
         self.n_experiments = n_experiments
-        self.experiments = [experiment(f"TPU_V7_M{n + 1}") for n in range(n_experiments)]
+        self.experiments = [experiment(f"TPU_V7_M{n + 1}") for n in range(1, n_experiments)]
         
         for experiment_n in self.experiments:
             experiment_n.read_data(4) # TODO generalize!
@@ -95,22 +102,27 @@ class mechanism:
 
         self.mean_force = np.mean([experiment_n.mean_force for experiment_n in self.experiments], axis=0)
         self.std_force = np.std([experiment_n.mean_force for experiment_n in self.experiments], axis=0)
+        self.sem_force = st.sem([experiment_n.mean_force for experiment_n in self.experiments], axis=0)
+        self.t_value = st.t.interval(confidence=0.95, df=7, loc=self.mean_force, scale=self.sem_force)
+
         self.displacement = self.experiments[0].interpolated_displacement # TODO
 
         self.fig, axs = plt.subplots(1,2,figsize=(16,8))
 
-        meancolor = "lightskyblue" #TODO
-        axs[0].plot(self.displacement, self.mean_force, color=meancolor, label="Mean of means of all mechanisms")
-        #axs[0].plot(self.displacement, self.mean_force, color=meancolor, label="Mittelung aller Mechanismen")
-        axs[0].fill_between(self.displacement, self.mean_force-self.std_force, self.mean_force + self.std_force, color=meancolor, alpha=0.3)
+        meancolor = "black" #TODO
+        axs[1].plot(self.displacement, self.mean_force, color=meancolor, label="Mean of means of all mechanisms")
+        #axs[1].plot(self.displacement, self.mean_force, color=meancolor, label="Mittelung aller Mechanismen")
+        #axs[1].fill_between(self.displacement, self.mean_force-self.std_force, self.mean_force + self.std_force, color=meancolor, alpha=0.3)
+        axs[1].fill_between(self.displacement, self.t_value[0], self.t_value[1], color=meancolor, alpha=0.3)
         #u_foo = np.array([0.16, 0.41, 0.74, 1.12, 1.48, 1.81, 2.11, 2.38, 2.65, 2.94])
 
         #F_foo = 4 * np.array([0.5, 1.,  1.5, 2.,  2.5, 3.,  3.5, 4.,  4.5, 5. ])
         #axs[0].plot(u_foo, F_foo, label="Numerical analysis, without slip")
         for n, experiment_n in enumerate(self.experiments):
-            axs[1].plot(experiment_n.interpolated_displacement, experiment_n.mean_force, label=f"Mean of mechanism {n + 1}")
-            #axs[1].plot(experiment_n.interpolated_displacement, experiment_n.mean_force, label=f"Mechanismus {n + 1}")
-            axs[1].fill_between(experiment_n.interpolated_displacement, experiment_n.mean_force-experiment_n.std_force, experiment_n.mean_force + experiment_n.std_force, alpha=0.3)
+            axs[0].plot(experiment_n.interpolated_displacement, experiment_n.mean_force, label=f"Mech. {n + 1 + 1}", color=colors[n + 1]) # remove +1 when working with 8 measurements! I'm sorry!
+            #axs[0].plot(experiment_n.interpolated_displacement, experiment_n.mean_force, label=f"Mechanismus {n + 1}")
+            #axs[0].fill_between(experiment_n.interpolated_displacement, experiment_n.mean_force-experiment_n.std_force, experiment_n.mean_force + experiment_n.std_force, alpha=0.3, color=colors[n + 1])
+            axs[0].fill_between(experiment_n.interpolated_displacement, experiment_n.t_value[0], experiment_n.t_value[1], alpha=0.3, color=colors[n + 1])
 
                 # Turn on the grid
         for ax in axs:
@@ -121,6 +133,7 @@ class mechanism:
             ax.set_ylim(0, ymax)
             #ax.legend(loc='upper right')
         axs[0].legend(loc='upper right')
+        axs[1].legend(loc='upper right')
         self.fig.suptitle("Mean result from all mechanisms")
         plt.tight_layout()
 
