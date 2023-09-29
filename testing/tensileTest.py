@@ -65,14 +65,19 @@ class experiment:
         #axs[1].plot(self.interpolated_displacement, self.mean_force, color=meancolor, label=f"Mittelung aller Messungen")
         #axs[1].fill_between(self.interpolated_displacement, self.mean_force-self.std_force, self.mean_force + self.std_force, color=meancolor, alpha=0.3)
         axs[1].fill_between(self.interpolated_displacement, self.t_value[0], self.t_value[1], color=meancolor, alpha=0.3)
-
+        # print(f" Upper bound average (Gauss stuff): {np.sum(self.t_value[0] - self.mean_force) / len(self.mean_force)}")
+        # print(f" Lower bound average (Gauss stuff): {np.sum(self.t_value[1] - self.mean_force) / len(self.mean_force)}")
+        # print("\n")
+        # print(f" Average std: {np.sum(self.std_force) / len(self.std_force)}")
+        # np.savetxt("std.txt", self.std_force)
+        # exit()
         # Turn on the grid
         for ax in axs:
             ax.grid(True, linestyle='dotted')
             ax.set_xlabel(r"Displacement $u_z$ in mm")
             ax.set_ylabel(r"Force $F$ in N")
-            ax.set_xlim(0, xmax) #1.02 * self.interpolated_displacement[-1])
-            ax.set_ylim(0, ymax) #1.02 * np.max([np.max(arr) for arr in self.force]))
+            ax.set_xlim(0, 1.05 * xmax)
+            ax.set_ylim(0, ymax)
             ax.legend(loc='upper right')
 
         self.fig.suptitle(self.title)
@@ -85,18 +90,19 @@ class mechanism:
         
         for experiment_n in self.experiments:
             experiment_n.read_data(4) # TODO generalize!
-        self.max_displacement = np.max([np.max([np.max(arr) for arr in experiment_n.displacement]) for experiment_n in self.experiments])
+        #self.max_displacement = np.max([np.max([np.max(arr) for arr in experiment_n.displacement]) for experiment_n in self.experiments])
+        self.max_displacement = 5 # fix maximum displacement so that all share the same upper border
         self.max_force = np.max([np.max([np.max(arr) for arr in experiment_n.force]) for experiment_n in self.experiments])
 
         for experiment_n in self.experiments:
             experiment_n.interpolate_data(n_interpPoints=30, zmax=self.max_displacement)
-            experiment_n.make_plot(xmax=1.1*self.max_displacement, ymax=1.1*self.max_force)
+            experiment_n.make_plot(xmax=self.max_displacement, ymax=1.1*self.max_force)
             experiment_n.fig.savefig(f"{experiment_n.title}-results.pdf", format="pdf")
             experiment_n.fig.savefig(f"{experiment_n.title}-results.svg")
 
     def make_plot(self, xmax=None, ymax=None):
         if xmax == None:
-            xmax = 1.1 * self.max_displacement
+            xmax = self.max_displacement
         if ymax == None:
             ymax = 1.1 * self.max_force
 
@@ -119,7 +125,7 @@ class mechanism:
         #F_foo = 4 * np.array([0.5, 1.,  1.5, 2.,  2.5, 3.,  3.5, 4.,  4.5, 5. ])
         #axs[0].plot(u_foo, F_foo, label="Numerical analysis, without slip")
         for n, experiment_n in enumerate(self.experiments):
-            axs[0].plot(experiment_n.interpolated_displacement, experiment_n.mean_force, label=f"Mech. {n + 1 + 1}", color=colors[n + 1]) # remove +1 when working with 8 measurements! I'm sorry!
+            axs[0].plot(experiment_n.interpolated_displacement, experiment_n.mean_force, label=f"TPU_V7_M{n + 1 + 1}", color=colors[n + 1]) # remove +1 when working with 8 measurements! I'm sorry!
             #axs[0].plot(experiment_n.interpolated_displacement, experiment_n.mean_force, label=f"Mechanismus {n + 1}")
             #axs[0].fill_between(experiment_n.interpolated_displacement, experiment_n.mean_force-experiment_n.std_force, experiment_n.mean_force + experiment_n.std_force, alpha=0.3, color=colors[n + 1])
             axs[0].fill_between(experiment_n.interpolated_displacement, experiment_n.t_value[0], experiment_n.t_value[1], alpha=0.3, color=colors[n + 1])
